@@ -1,0 +1,144 @@
+<% layout("/layouts/boilerplate") %>
+
+<div class="container">
+  <h1>Create a New Listing</h1>
+
+  <div class="form-container">
+    <form action="/listings" method="post" novalidate class="needs-validation">
+      <div class="form-section">
+        <h3 class="form-section-title">Basic Information</h3>
+
+        <div class="form-group">
+          <label for="title">Listing Title</label>
+          <input
+            type="text"
+            name="listing[title]"
+            id="title"
+            placeholder="e.g., Beautiful Beachfront Villa"
+            required
+            class="form-control"
+          />
+          <span class="form-hint"
+            >Give your listing a descriptive and attractive title</span
+          >
+          <div class="invalid-feedback">Please enter the title</div>
+        </div>
+
+        <div class="form-group">
+          <label for="description">Description</label>
+          <textarea
+            name="listing[description]"
+            id="description"
+            placeholder="Describe your property, amenities, and what makes it special..."
+            required
+            class="form-control"
+          ></textarea>
+          <span class="form-hint"
+            >Be detailed about what guests can expect</span
+          >
+          <div class="invalid-feedback">Please enter a short description.</div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-title">Location Details</h3>
+
+        <div class="form-row">
+          <div class="form-col">
+            <div class="form-group">
+              <label for="location">Location</label>
+              <input
+                type="text"
+                name="listing[location]"
+                id="location"
+                placeholder="e.g., 123 Beach Road"
+                required
+                class="form-control"
+              />
+              <span class="form-hint">Street address or area name</span>
+              <div class="invalid-feedback">Please enter a valid location.</div>
+            </div>
+          </div>
+
+          <div class="form-col">
+            <div class="form-group">
+              <label for="country">Country</label>
+              <input
+                type="text"
+                name="listing[country]"
+                id="country"
+                placeholder="e.g., India"
+                required
+                class="form-control"
+              />
+              <span class="form-hint"
+                >Country where your property is located</span
+              >
+              <div class="invalid-feedback">Please enter a valid country.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
+        <h3 class="form-section-title">Pricing & Visuals</h3>
+
+        <div class="form-row">
+          <div class="form-col">
+            <div class="form-group">
+              <label for="price">Price per Night (₹)</label>
+              <input
+                type="number"
+                name="listing[price]"
+                id="price"
+                placeholder="1200"
+                min="0"
+                required
+                class="form-control"
+              />
+              <span class="form-hint"
+                >Set a competitive price for your listing</span
+              >
+              <div class="invalid-feedback">Please enter a valid price.</div>
+            </div>
+          </div>
+
+          <div class="form-col">
+            <div class="form-group">
+              <label for="image">Image URL</label>
+              <input
+                type="text"
+                name="listing[image.url]"
+                id="image"
+                placeholder="https://example.com/image.jpg"
+                onchange="previewImage(this.value)"
+                class="form-control"
+              />
+              <span class="form-hint"
+                >Paste a link to a high-quality photo of your property</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Image Preview</label>
+          <div class="image-preview">
+            <div class="image-preview-placeholder">
+              <i
+                class="fas fa-image"
+                style="font-size: 3rem; margin-bottom: 10px"
+              ></i>
+              <p>Image preview will appear here</p>
+            </div>
+            <img id="image-preview-element" src="" alt="Preview" />
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">
+        <i class="fas fa-plus"></i> Create Listing
+      </button>
+    </form>
+  </div>
+</div>

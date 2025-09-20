@@ -1,0 +1,39 @@
+<% layout("/layouts/boilerplate") %>
+
+<h1>All Listings</h1>
+<div class="hero">
+  <div class="hero-content">
+    <h1>Find Your Perfect Getaway</h1>
+    <p>Discover unique places to stay and experiences around the world.</p>
+    <a href="/listings" class="hero-btn">Explore Listings</a>
+  </div>
+</div>
+<div class="row">
+  <% for (const listing of allListings) {%>
+  <div class="col-md-4">
+    <a href="/listings/<%= listing._id %>" class="listing_link">
+      <div class="card">
+        <img
+          src="<%= listing.image.url %>"
+          class="card-img-top img-fluid"
+          alt="listings_image"
+          style="height: 20rem"
+        />
+        <div class="card-img-overlay">
+          <span class="badge bg-primary">New</span>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">
+            <a href="/listings/<%= listing._id %>"
+              ><b><%= listing.title %></b></a
+            >
+          </h5>
+          <p class="card-text">
+            &#8377;<%= listing.price.toLocaleString("en-IN") %>/night
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <%} %>
+</div>

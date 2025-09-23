@@ -1,7 +1,7 @@
 <% layout("/layouts/boilerplate") %>
 
 <div class="listing-details">
-  <h3>Listing Details :</h3>
+  <h3> <%= listing.title %></h3>
 
   <div class="listing-image">
     <img src="<%= listing.image.url %>" alt="<%= listing.title %>" />
@@ -9,7 +9,6 @@
 
   <div class="listing-info">
     <ul>
-      <li><strong>Title:</strong> <%= listing.title %></li>
       <li><strong>Description:</strong> <%= listing.description %></li>
       <li>
         <strong>Price:</strong>

@@ -6,7 +6,8 @@ const mongoose = require("mongoose");
 const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
-
+const session=require("express-session");
+const flash=require("connect-flash");
 
 const listings=require("./routes/listing");
 const reviews=require("./routes/review");
@@ -17,6 +18,27 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.engine("ejs", ejsMate);
+
+
+const sessionOpitons={
+  secret:"mysupersecretcode",
+  resave:false,
+  saveUninitialized :true,
+  cookie:{
+    expires: Date.now() + 7*24*60*60*1000,
+    maxAge:7*24*60*60*1000,
+    httpOnly:true
+  }
+};
+
+app.use(session(sessionOpitons));
+app.use(flash());
+
+app.use((req,res,next)=>{
+  res.locals.success=req.flash("success");
+  res.locals.error=req.flash("error");
+  next();
+})
 
 main()
   .then(() => {

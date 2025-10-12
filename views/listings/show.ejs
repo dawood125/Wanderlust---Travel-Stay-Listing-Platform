@@ -18,9 +18,11 @@
       </li>
       <li><strong>Location:</strong> <%= listing.location %></li>
       <li><strong>Country:</strong> <%= listing.country %></li>
+      <li><strong>Owned by:</strong> <%= listing.owner.username %></li>
     </ul>
   </div>
 
+  <% if (currUser && currUser.equals(listing.owner)) {%>
   <div class="listing-actions">
     <a href="/listings/<%= listing._id %>/edit" class="btn-custom edit-btn"
       >Edit</a
@@ -29,8 +31,10 @@
       <button class="btn-custom delete-btn">Delete</button>
     </form>
   </div>
+  <%} %>
 </div>
 
+<% if (currUser) {%>
 <div class="col-md-8 offset-2">
   <h4 class="text-center my-md-3">Leave a reveiw</h4>
 
@@ -66,43 +70,47 @@
     <button class="rounded mt-md-4">Submit</button>
   </form>
 </div>
+<%} %>
 <div class="reviews-section mt-5">
   <h4 class="text-center mb-4">Customer Reviews</h4>
 
   <% if (listing.reviews.length === 0) { %>
-    <p class="text-center text-muted">
-      No reviews yet. Be the first to leave one!
-    </p>
+  <p class="text-center text-muted">
+    No reviews yet. Be the first to leave one!
+  </p>
   <% } else { %>
-    <div class="row g-4">
-      <% listing.reviews.forEach(review => { %>
-        <div class="col-md-6">
-          <div class="card shadow-sm border-0 h-100 rounded-3">
-            <div class="card-body">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <div class="review-rating">
-                  <% for (let i = 1; i <= 5; i++) { %>
-                    <% if (i <= review.rating) { %>
-                      <span class="star text-warning">&#9733;</span>
-                    <% } else { %>
-                      <span class="star text-muted">&#9734;</span>
-                    <% } %>
-                  <% } %>
-                </div>
-                <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST">
-                  <button class="btn btn-sm btn-outline-danger">
-                    <i class="fa fa-trash"></i>
-                  </button>
-                </form>
-              </div>
-              <p class="review-comment"><%= review.comment %></p>
-              <small class="text-muted">
-                Posted on <%= review.createdAt.toDateString() %>
-              </small>
+  <div class="row g-4">
+    <% listing.reviews.forEach(review => { %>
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0 h-100 rounded-3">
+        <div class="card-body">
+          <div class="card-title">@<%= review.author.username %></div>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div class="review-rating">
+              <% for (let i = 1; i <= 5; i++) { %> <% if (i <= review.rating) {
+              %>
+              <span class="star text-warning">&#9733;</span>
+              <% } else { %>
+              <span class="star text-muted">&#9734;</span>
+              <% } %> <% } %>
             </div>
+            <form
+              action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+              method="POST"
+            >
+              <button class="btn btn-sm btn-outline-danger">
+                <i class="fa fa-trash"></i>
+              </button>
+            </form>
           </div>
+          <p class="review-comment"><%= review.comment %></p>
+          <small class="text-muted">
+            Posted on <%= review.createdAt.toDateString() %>
+          </small>
         </div>
-      <% }) %>
+      </div>
     </div>
+    <% }) %>
+  </div>
   <% } %>
 </div>

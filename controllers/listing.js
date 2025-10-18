@@ -26,13 +26,28 @@ module.exports.showListing = async (req, res) => {
   res.render("listings/show.ejs", { listing });
 };
 
-module.exports.createListing = async (req, res, next) => {
+module.exports.createListing = async (req, res) => {
+  console.log("FILES:", req.files);
+  console.log("BODY:", req.body);
+
   const newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
+
+  // 🖼️ Extract image data from Cloudinary (req.files)
+  if (req.files && req.files["listing[image][url]"]) {
+    const fileData = req.files["listing[image][url]"][0];
+    newListing.image = {
+      url: fileData.path,       // Cloudinary URL
+      filename: fileData.filename // Cloudinary file name
+    };
+  }
+
   await newListing.save();
-  req.flash("success", "New listing Created!");
-  res.redirect("/listings");
+  req.flash("success", "New listing created!");
+  res.redirect(`/listings/${newListing._id}`);
 };
+
+
 
 module.exports.editListing = async (req, res) => {
   let { id } = req.params;

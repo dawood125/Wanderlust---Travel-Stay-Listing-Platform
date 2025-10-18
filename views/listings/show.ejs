@@ -9,16 +9,28 @@
 
   <div class="listing-info">
     <ul>
-      <li><strong>Description:</strong> <%= listing.description %></li>
+      <li>
+        <strong>Description:</strong>
+        <%= listing.description %>
+      </li>
       <li>
         <strong>Price:</strong>
         <span class="price"
           >&#8377; <%= listing.price.toLocaleString("en-IN") %></span
         >
       </li>
-      <li><strong>Location:</strong> <%= listing.location %></li>
-      <li><strong>Country:</strong> <%= listing.country %></li>
-      <li><strong>Owned by:</strong> <%= listing.owner.username %></li>
+      <li>
+        <strong>Location:</strong>
+        <%= listing.location %>
+      </li>
+      <li>
+        <strong>Country:</strong>
+        <%= listing.country %>
+      </li>
+      <li>
+        <strong>Owned by:</strong>
+        <%= listing.owner.username %>
+      </li>
     </ul>
   </div>
 
@@ -44,7 +56,7 @@
     novalidate
     class="needs-validation"
   >
-    <div>
+    <!-- <div>
       <label for="rating">Rating</label>
       <input
         type="range"
@@ -54,7 +66,30 @@
         id="rating"
         class="form-range border-0"
       />
-    </div>
+    </div> -->
+
+    <label for="rating">Rating</label>
+    <fieldset class="starability-slot mt-md-4">
+      <input
+        type="radio"
+        id="no-rate"
+        class="input-no-rate"
+        name="review[rating]"
+        value="1"
+        checked
+        aria-label="No rating."
+      />
+      <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+      <label for="first-rate1" title="Terrible">1 star</label>
+      <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+      <label for="first-rate2" title="Not good">2 stars</label>
+      <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+      <label for="first-rate3" title="Average">3 stars</label>
+      <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+      <label for="first-rate4" title="Very good">4 stars</label>
+      <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+      <label for="first-rate5" title="Amazing">5 stars</label>
+    </fieldset>
     <div>
       <label for="comment">Comments</label>
       <textarea
@@ -74,21 +109,20 @@
 <div class="reviews-section mt-5">
   <h4 class="text-center mb-4">Customer Reviews</h4>
 
-  <% if (listing.reviews.length === 0) { %>
+  <% if (listing.reviews.length===0) { %>
   <p class="text-center text-muted">
     No reviews yet. Be the first to leave one!
   </p>
   <% } else { %>
   <div class="row g-4">
-    <% listing.reviews.forEach(review => { %>
+    <% listing.reviews.forEach(review=> { %>
     <div class="col-md-6">
       <div class="card shadow-sm border-0 h-100 rounded-3">
         <div class="card-body">
           <div class="card-title">@<%= review.author.username %></div>
           <div class="d-flex justify-content-between align-items-center mb-2">
             <div class="review-rating">
-              <% for (let i = 1; i <= 5; i++) { %> <% if (i <= review.rating) {
-              %>
+              <% for (let i=1; i <=5; i++) { %> <% if (i <=review.rating) { %>
               <span class="star text-warning">&#9733;</span>
               <% } else { %>
               <span class="star text-muted">&#9734;</span>

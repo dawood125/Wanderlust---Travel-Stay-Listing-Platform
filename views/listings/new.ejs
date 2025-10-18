@@ -4,7 +4,7 @@
   <h1 style="text-align: center; padding: 15px 0px">Create a New Listing</h1>
 
   <div class="form-container">
-    <form action="/listings" method="post" novalidate class="needs-validation">
+    <form action="/listings" method="post" novalidate class="needs-validation" enctype="multipart/form-data">
       <div class="form-section">
         <h3 class="form-section-title">Basic Information</h3>
 
@@ -105,12 +105,11 @@
 
           <div class="form-col">
             <div class="form-group">
-              <label for="image">Image URL</label>
+              <label for="image">Upload Image</label>
               <input
-                type="text"
+                type="file"
                 name="listing[image][url]"
                 id="image"
-                placeholder="https://example.com/image.jpg"
                 onchange="previewImage(this.value)"
                 class="form-control"
               />

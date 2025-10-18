@@ -1,0 +1,7 @@
+{
+  "watch": ["app.js", "routes", "models", "controllers", "views", "utils", "cloudConfig.js"],
+  "ext": "js,json,ejs",
+  "ignore": ["uploads/*", "node_modules/*", ".git/*", ".env"],
+  "delay": "1000",
+  "exec": "node app.js"
+}

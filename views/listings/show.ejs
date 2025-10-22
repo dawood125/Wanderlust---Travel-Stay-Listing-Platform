@@ -148,3 +148,44 @@
   </div>
   <% } %>
 </div>
+<h1 class="pt-md-4">Where you will be:</h1>
+<div
+  id="map"
+  style="height: 500px; width: 100%; border-radius: 10px; margin-top: 20px"
+></div>
+<script>
+  async function getCoordinates(location) {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        location
+      )}`
+    );
+    const data = await response.json();
+    return data.length > 0 ? [data[0].lat, data[0].lon] : null;
+  }
+
+  const locationText = "<%= listing.location %> ";
+
+  getCoordinates(locationText).then((coords) => {
+    const mapContainer = document.getElementById("map");
+    if (!coords) {
+      mapContainer.innerHTML = `
+        <div style="text-align:center; padding:40px; color:#555;">
+          <i class="fa fa-map-marker-alt fa-3x mb-3"></i>
+          <h5>Map not available for this location</h5>
+          <p>Please check the spelling or update the location.</p>
+        </div>`;
+      mapContainer.style.background = "#f8f9fa";
+      mapContainer.style.border = "1px solid #ddd";
+      return;
+    }
+
+    const map = L.map("map").setView(coords, 13);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+
+    L.marker(coords).addTo(map).bindPopup("<%= listing.title %>").openPopup();
+  });
+</script>

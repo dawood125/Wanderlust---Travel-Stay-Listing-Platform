@@ -33,12 +33,12 @@ module.exports.createListing = async (req, res) => {
   const newListing = new Listing(req.body.listing);
   newListing.owner = req.user._id;
 
-  // 🖼️ Extract image data from Cloudinary (req.files)
+
   if (req.files && req.files["listing[image][url]"]) {
     const fileData = req.files["listing[image][url]"][0];
     newListing.image = {
-      url: fileData.path,       // Cloudinary URL
-      filename: fileData.filename // Cloudinary file name
+      url: fileData.path,       
+      filename: fileData.filename 
     };
   }
 
@@ -64,7 +64,18 @@ module.exports.updateListing = async (req, res) => {
   if (!req.body.listing) {
     throw new ExpressError(400, "Send valid data for listing.");
   }
-  await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  let listing= await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+  if (req.files && req.files["listing[image][url]"]) {
+    const fileData = req.files["listing[image][url]"][0];
+    listing.image = {
+      url: fileData.path,       
+      filename: fileData.filename 
+    };
+    await listing.save();
+  }
+
+
   req.flash("success", "listing Updated Successfully!");
   res.redirect(`/listings/${id}`);
 };

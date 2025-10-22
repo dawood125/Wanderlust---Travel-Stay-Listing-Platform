@@ -66,9 +66,9 @@ async function main() {
   await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
 }
 
-app.get("/", (req, res) => {
-  res.send("The root is working.");
-});
+// app.get("/", (req, res) => {
+//   res.send("The root is working.");
+// });
 
 
 app.use("/listings", listingRouter);

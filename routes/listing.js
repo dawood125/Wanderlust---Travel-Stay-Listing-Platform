@@ -30,6 +30,7 @@ router
   .put(
     validateListing,
     isLoggedIn,
+    upload.fields([{ name: "listing[image][url]", maxCount: 1 }]),
     isOwner,
     wrapAsync(listingControllers.updateListing)
   )

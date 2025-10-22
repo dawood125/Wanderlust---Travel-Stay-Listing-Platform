@@ -509,7 +509,7 @@ textarea {
 }
 /* ===== LISTING DETAILS PAGE (Bootstrap override) ===== */
 .listing-details {
-  max-width: 750px !important;
+  max-width: 100% !important;
   margin: 50px auto !important;
   background: #fff !important;
   border-radius: 14px !important;
@@ -683,9 +683,9 @@ textarea {
 .btn-submit:hover {
   background: var(--primary-dark) !important;
 }
-/* ===== REVIEWS SECTION ===== */
+
 .reviews-section {
-  max-width: 750px;
+  max-width: 100%;
   margin: 40px auto;
   padding: 25px;
   background: var(--white);
@@ -760,4 +760,55 @@ textarea {
   background-color: none;
   border-radius: none;
   box-shadow: none;
+}
+#map {
+  height: 400px;
+  width: 100%;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+  overflow: hidden;
+}
+#search-input {
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+}
+
+#search-inp {
+  border-radius: 50px;
+  border: 1px solid #ddd;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  width: 250px;
+}
+
+#search-inp:focus {
+  outline: none;
+  border-color: #fe424d;
+  box-shadow: 0 0 8px rgba(254, 66, 77, 0.3);
+}
+
+#btn-search {
+  background-color: #fe424d;
+  color: #fff;
+  border-radius: 50px;
+  padding: 0.6rem 1rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+#btn-search i {
+  margin-right: 0.4rem;
+}
+
+#btn-search:hover {
+  background-color: #e71d36;
 }

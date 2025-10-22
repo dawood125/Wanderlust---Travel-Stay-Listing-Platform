@@ -1,38 +1,318 @@
 <% layout("/layouts/boilerplate") %>
-<h1>All Listings</h1>
-<div class="hero">
-  <div class="hero-content">
-    <h1>Find Your Perfect Getaway</h1>
-    <p>Discover unique places to stay and experiences around the world.</p>
-    <a href="/listings" class="hero-btn">Explore Listings</a>
-  </div>
-</div>
-<div class="row">
-  <% for (const listing of allListings) {%>
-  <div class="col-md-4">
-    <a href="/listings/<%= listing._id %>" class="listing_link">
-      <div class="card">
-        <img
-          src="<%= listing.image.url %>"
-          class="card-img-top img-fluid"
-          alt="listings_image"
-          style="height: 20rem"
-        />
-        <div class="card-img-overlay">
-          <span class="badge bg-primary">New</span>
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">
-            <a href="/listings/<%= listing._id %>"
-              ><b><%= listing.title %></b></a
-            >
-          </h5>
-          <p class="card-text">
-            &#8377;<%= listing.price.toLocaleString("en-IN") %>/night
-          </p>
-        </div>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  .filters-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e9e9ee;
+    background: #fff;
+    top: 56px;
+    z-index: 50;
+  }
+
+  .filter-slider {
+    flex: 1 1 auto;
+    overflow: hidden;
+  }
+
+  .my-slider {
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 0.25rem 0;
+  }
+
+  .filter {
+    min-width: 86px;
+    max-width: 120px;
+    flex: 0 0 auto;
+    text-align: center;
+    color: #555;
+    opacity: 0.85;
+    transition: transform 0.22s ease, opacity 0.22s ease;
+    background: #fff;
+    padding: 0.25rem;
+    border-radius: 12px;
+  }
+
+  .filter i {
+    font-size: 1.25rem;
+    display: block;
+    margin-bottom: 6px;
+    color: #444;
+  }
+  .filter p {
+    font-size: 0.85rem;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .filter:hover {
+    transform: translateY(-6px);
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  .filter.active {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(180deg, #fff, #fff);
+    color: #111;
+  }
+
+  .tax-switch {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: #fbfbfb;
+    border: 1px solid #efeff2;
+    font-size: 0.92rem;
+  }
+  .tax-switch .form-check-input {
+    width: 46px;
+    height: 26px;
+    margin: 0;
+  }
+  .tax-switch .form-check-label {
+    margin-left: 0.5rem;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+  }
+
+  .card {
+    border: none;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+    box-shadow: 0 4px 12px rgba(13, 13, 13, 0.04);
+    background: #fff;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 14px 30px rgba(18, 18, 18, 0.08);
+  }
+  .card-img-top {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
+  }
+  .card-body {
+    padding: 0.9rem 1rem;
+    flex: 1 1 auto;
+  }
+  .card-title {
+    font-size: 1.02rem;
+    margin-bottom: 0.35rem;
+    color: #111;
+    font-weight: 600;
+    line-height: 1.1;
+  }
+  .price {
+    color: #6b7280;
+    font-size: 0.95rem;
+  }
+  .badge-new {
+    background: linear-gradient(90deg, #ff5a6d, #ff3e55);
+    color: white;
+    padding: 0.35rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 0.78rem;
+  }
+
+  .tax-info {
+    display: none;
+    color: #9aa0a6;
+    font-size: 0.82rem;
+    margin-left: 6px;
+  }
+
+  @media (max-width: 992px) {
+    .card-img-top {
+      height: 200px;
+    }
+    .my-slider {
+      gap: 0.8rem;
+    }
+    .filter {
+      min-width: 84px;
+    }
+  }
+  @media (max-width: 576px) {
+    .card-img-top {
+      height: 160px;
+    }
+    .filters-row {
+      padding: 0.7rem 0.75rem;
+    }
+    .tax-switch {
+      display: none;
+    }
+  }
+</style>
+
+
+<div class="filters-row">
+  <div class="filter-slider">
+    <div class="my-slider">
+      <div class="filter active">
+        <i class="fa-solid fa-fire"></i>
+        <p>Trending</p>
       </div>
-    </a>
+      <div class="filter">
+        <i class="fa-solid fa-bed"></i>
+        <p>Rooms</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-mountain-city"></i>
+        <p>Cities</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-mountain"></i>
+        <p>Mountains</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-chess-rook"></i>
+        <p>Castles</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-umbrella-beach"></i>
+        <p>Beach</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-campground"></i>
+        <p>Camping</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-water"></i>
+        <p>Lake</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-tree"></i>
+        <p>Forest</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-spa"></i>
+        <p>Spa</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-snowflake"></i>
+        <p>Snow</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-hotel"></i>
+        <p>Hotels</p>
+      </div>
+      <div class="filter">
+        <i class="fa-solid fa-house-chimney"></i>
+        <p>Villas</p>
+      </div>
+    </div>
   </div>
-  <%} %>
+
+  <div class="tax-switch" title="Toggle to display price including tax">
+    <div class="form-check form-switch mb-0">
+      <input class="form-check-input" type="checkbox" id="switchCheckDefault" />
+      <label class="form-check-label" for="switchCheckDefault"
+        >Display total after taxes</label
+      >
+    </div>
+  </div>
 </div>
+
+
+<div class="container mt-4">
+  <h2 class="mb-4">All Listings</h2>
+
+  <div class="row g-4">
+    <% for (let i=0; i < allListings.length; i++) { const listing =
+    allListings[i]; %>
+    <div class="col-md-4 col-sm-6">
+      <a href="/listings/<%= listing._id %>" style="text-decoration: none">
+        <div class="card">
+          <img
+            src="<%= listing.image.url %>"
+            alt="listing"
+            class="card-img-top"
+          />
+          <div style="position: absolute; top: 12px; left: 12px">
+            <% if (i < 5) { %>
+            <span class="badge-new">New</span>
+            <% } %>
+          </div>
+
+          <div class="card-body">
+            <h5 class="card-title"><%= listing.title %></h5>
+            <p class="price">
+              ₹<%= listing.price.toLocaleString("en-IN") %>/night
+              <span class="tax-info">+18% GST</span>
+            </p>
+          </div>
+        </div>
+      </a>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- tiny-slider JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.9.4/min/tiny-slider.js"></script>
+
+<script>
+  // initialize tiny-slider
+  const slider = tns({
+    container: ".my-slider",
+    items: 8,
+    slideBy: 1,
+    mouseDrag: true,
+    swipeAngle: false,
+    speed: 350,
+    gutter: 16,
+    controls: false,
+    nav: false,
+    responsive: {
+      0: { items: 3 },
+      576: { items: 5 },
+      768: { items: 6 },
+      992: { items: 8 },
+    },
+  });
+
+  // filter active toggle
+  document.querySelectorAll(".filter").forEach((f) => {
+    f.addEventListener("click", () => {
+      document
+        .querySelectorAll(".filter")
+        .forEach((el) => el.classList.remove("active"));
+      f.classList.add("active");
+    });
+  });
+
+  // tax toggle behaviour (show/hide + recompute optional)
+  const taxSwitch = document.getElementById("switchCheckDefault");
+  taxSwitch.addEventListener("change", () => {
+    document.querySelectorAll(".tax-info").forEach((el) => {
+      el.style.display = taxSwitch.checked ? "inline" : "none";
+    });
+  });
+
+  // optional: hide tax info initially (already hidden by CSS), show if toggle is pre-checked
+  if (taxSwitch.checked) {
+    document
+      .querySelectorAll(".tax-info")
+      .forEach((el) => (el.style.display = "inline"));
+  }
+</script>

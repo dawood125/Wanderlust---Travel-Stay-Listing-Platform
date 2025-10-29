@@ -1,7 +1,6 @@
 if (process.env.NODE_ENV != "production") {
-  require('dotenv').config();
+  require("dotenv").config();
 }
-
 
 const express = require("express");
 const app = express();
@@ -12,15 +11,15 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const localStrategy = require("passport-local");
 const User = require("./models/user");
 
-
 const listingRouter = require("./routes/listing");
 const reviewRouter = require("./routes/review");
-const userRouter=require("./routes/user");
+const userRouter = require("./routes/user");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
@@ -29,7 +28,22 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.static(path.join(__dirname, "public")));
 app.engine("ejs", ejsMate);
 
+const dbUrl = process.env.ATLASDB_URL;
+
+const store = MongoStore.create({
+  mongoUrl: dbUrl,
+  crypto: {
+    secret: "mysupersecretcode",
+  },
+  touchAfter: 24 * 3600,
+});
+
+store.on("error", () => {
+  console.log("Error in mongo session store", err);
+});
+
 const sessionOpitons = {
+  store,
   secret: "mysupersecretcode",
   resave: false,
   saveUninitialized: true,
@@ -52,9 +66,10 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.success = req.flash("success");
   res.locals.error = req.flash("error");
-  res.locals.currUser=req.user;
+  res.locals.currUser = req.user;
   next();
 });
+
 
 main()
   .then(() => {
@@ -63,18 +78,16 @@ main()
   .catch((err) => console.log(err));
 
 async function main() {
-  await mongoose.connect("mongodb://127.0.0.1:27017/wanderlust");
+  await mongoose.connect(dbUrl);
 }
 
 // app.get("/", (req, res) => {
 //   res.send("The root is working.");
 // });
 
-
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
-app.use("/",userRouter);
-
+app.use("/", userRouter);
 
 app.all(/.*/, (req, res, next) => {
   next(new ExpressError(404, "Page not found!"));
